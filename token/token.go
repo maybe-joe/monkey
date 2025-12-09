@@ -84,3 +84,7 @@ func Let() Token {
 func Identifier(literal string) Token {
 	return Token{Type: IDENT, Literal: literal}
 }
+
+func Integer(literal string) Token {
+	return Token{Type: INT, Literal: literal}
+}

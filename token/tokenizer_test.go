@@ -11,7 +11,7 @@ func Test_Tokenizer_Empty(t *testing.T) {
 }
 
 func Test_Tokenizer_Next(t *testing.T) {
-	tz := NewTokenizer("=+(){},;fn let aAbBcC_")
+	tz := NewTokenizer("=+(){},;fn let aAbBcC_ 9 1")
 
 	testcases := []struct {
 		name     string
@@ -28,6 +28,8 @@ func Test_Tokenizer_Next(t *testing.T) {
 		{"Function", Function()},
 		{"Let", Let()},
 		{"Identifier", Identifier("aAbBcC_")},
+		{"9", Integer("9")},
+		{"1", Integer("1")},
 		{"Eof", Eof()},
 	}
 
@@ -36,4 +38,17 @@ func Test_Tokenizer_Next(t *testing.T) {
 			assert.Equal(t, tc.expected, tz.Next())
 		})
 	}
+}
+
+func Test_Tokenizer_Tokenize_SimpleProgram(t *testing.T) {
+	const code = `
+		let five = 5;
+		let ten = 10;
+
+		let add = fn(x, y) {
+		  x + y;
+		};
+
+		let result = add(five, ten);
+	`
 }

@@ -51,6 +51,13 @@ func (tz *Tokenizer) Peek() byte {
 	}
 }
 
+// Whitespace, skips over whitespace characters.
+func (tz *Tokenizer) Whitespace() {
+	for isWhitespace(tz.char) {
+		tz.Advance()
+	}
+}
+
 // Identifier, reads an identifier from the code and returns it as a Token.
 func (tz *Tokenizer) Identifier() string {
 	start := tz.cursor
@@ -62,11 +69,15 @@ func (tz *Tokenizer) Identifier() string {
 	return tz.code[start:tz.cursor]
 }
 
-// Whitespace, skips over whitespace characters.
-func (tz *Tokenizer) Whitespace() {
-	for isWhitespace(tz.char) {
+// Number, reads a number from the code and returns it as a Token.
+func (tz *Tokenizer) Number() string {
+	start := tz.cursor
+
+	for isDigit(tz.char) {
 		tz.Advance()
 	}
+
+	return tz.code[start:tz.cursor]
 }
 
 // Next returns the next token from the code and advances the tokenizer.
@@ -105,6 +116,8 @@ func (tz *Tokenizer) Next() Token {
 			case "let":
 				return Let()
 			}
+		} else if isDigit(tz.char) {
+			return Integer(tz.Number())
 		} else {
 			t = Illegal(tz.char)
 		}
@@ -140,4 +153,9 @@ func isWhitespace(ch byte) bool {
 // These are valid characters for identifiers in Monkey.
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+// isDigit, returns true if the given character is a digit.
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
