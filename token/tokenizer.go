@@ -42,6 +42,15 @@ func (tz *Tokenizer) Advance() {
 	tz.peek++
 }
 
+// Peek, returns the next character without advancing the tokenizer.
+func (tz *Tokenizer) Peek() byte {
+	if tz.peek >= len(tz.code) {
+		return 0
+	} else {
+		return tz.code[tz.peek]
+	}
+}
+
 // Identifier, reads an identifier from the code and returns it as a Token.
 func (tz *Tokenizer) Identifier() string {
 	start := tz.cursor
@@ -53,24 +62,21 @@ func (tz *Tokenizer) Identifier() string {
 	return tz.code[start:tz.cursor]
 }
 
+// Whitespace, skips over whitespace characters.
+func (tz *Tokenizer) Whitespace() {
+	for isWhitespace(tz.char) {
+		tz.Advance()
+	}
+}
+
 // Next returns the next token from the code and advances the tokenizer.
 func (tz *Tokenizer) Next() Token {
 	var t Token
 
+	// Skip whitespace
+	tz.Whitespace()
+
 	switch tz.char {
-	default:
-		if isLetter(tz.char) {
-			switch literal := tz.Identifier(); literal {
-			default:
-				t = Identifier(literal)
-			case "fn":
-				t = Function()
-			case "let":
-				t = Let()
-			}
-		} else {
-			t = Illegal()
-		}
 	case 0:
 		t = Eof()
 	case '=':
@@ -89,6 +95,19 @@ func (tz *Tokenizer) Next() Token {
 		t = Comma()
 	case ';':
 		t = Semicolon()
+	default:
+		if isLetter(tz.char) {
+			switch literal := tz.Identifier(); literal {
+			default:
+				return Identifier(literal)
+			case "fn":
+				return Function()
+			case "let":
+				return Let()
+			}
+		} else {
+			t = Illegal(tz.char)
+		}
 	}
 
 	tz.Advance()
@@ -112,7 +131,12 @@ func (tz *Tokenizer) Tokenize() []Token {
 	return tokens
 }
 
-// isLetter checks if the given character is a letter (a-z, A-Z) or underscore.
+// isWhitespace, returns true if the given character is a whitespace character.
+func isWhitespace(ch byte) bool {
+	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r'
+}
+
+// isLetter, returns true if the given character is a letter or underscore.
 // These are valid characters for identifiers in Monkey.
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'

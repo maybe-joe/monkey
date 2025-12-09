@@ -33,8 +33,8 @@ type Token struct {
 	Literal string
 }
 
-func Illegal() Token {
-	return Token{Type: ILLEGAL, Literal: ""}
+func Illegal(literal byte) Token {
+	return Token{Type: ILLEGAL, Literal: string(literal)}
 }
 
 func Eof() Token {
