@@ -94,6 +94,18 @@ func (tz *Tokenizer) Next() Token {
 		t = Assignment()
 	case '+':
 		t = Plus()
+	case '-':
+		t = Minus()
+	case '!':
+		t = Bang()
+	case '*':
+		t = Asterisk()
+	case '/':
+		t = Slash()
+	case '<':
+		t = LessThan()
+	case '>':
+		t = GreaterThan()
 	case '(':
 		t = LeftParenthesis()
 	case ')':

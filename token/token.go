@@ -11,8 +11,16 @@ const (
 	INT   TokenType = "INT"   // 1343456
 
 	// Operators
-	ASSIGN TokenType = "="
-	PLUS   TokenType = "+"
+	ASSIGN   TokenType = "="
+	PLUS     TokenType = "+"
+	MINUS    TokenType = "-"
+	BANG     TokenType = "!"
+	ASTERISK TokenType = "*"
+	SLASH    TokenType = "/"
+
+	// Comparisons
+	LT TokenType = "<"
+	GT TokenType = ">"
 
 	// Delimiters
 	COMMA     TokenType = ","
@@ -47,6 +55,30 @@ func Assignment() Token {
 
 func Plus() Token {
 	return Token{Type: PLUS, Literal: "+"}
+}
+
+func Minus() Token {
+	return Token{Type: MINUS, Literal: "-"}
+}
+
+func Bang() Token {
+	return Token{Type: BANG, Literal: "!"}
+}
+
+func Asterisk() Token {
+	return Token{Type: ASTERISK, Literal: "*"}
+}
+
+func Slash() Token {
+	return Token{Type: SLASH, Literal: "/"}
+}
+
+func LessThan() Token {
+	return Token{Type: LT, Literal: "<"}
+}
+
+func GreaterThan() Token {
+	return Token{Type: GT, Literal: ">"}
 }
 
 func LeftParenthesis() Token {
