@@ -73,6 +73,18 @@ func Semicolon() Token {
 	return Token{Type: SEMICOLON, Literal: ";"}
 }
 
+func Function() Token {
+	return Token{Type: FUNCTION, Literal: "FUNCTION"}
+}
+
+func Let() Token {
+	return Token{Type: LET, Literal: "LET"}
+}
+
+func Identifier(literal string) Token {
+	return Token{Type: IDENT, Literal: literal}
+}
+
 // Tokenizer, converts a string of monkey code into tokens.
 type Tokenizer struct {
 	// code, program string to tokenize.
@@ -115,13 +127,35 @@ func (tz *Tokenizer) Advance() {
 	tz.peek++
 }
 
+// Identifier, reads an identifier from the code and returns it as a Token.
+func (tz *Tokenizer) Identifier() string {
+	start := tz.cursor
+
+	for isLetter(tz.char) {
+		tz.Advance()
+	}
+
+	return tz.code[start:tz.cursor]
+}
+
 // Next returns the next token from the code and advances the tokenizer.
 func (tz *Tokenizer) Next() Token {
 	var t Token
 
 	switch tz.char {
 	default:
-		t = Illegal()
+		if isLetter(tz.char) {
+			switch literal := tz.Identifier(); literal {
+			default:
+				t = Identifier(literal)
+			case "fn":
+				t = Function()
+			case "let":
+				t = Let()
+			}
+		} else {
+			t = Illegal()
+		}
 	case 0:
 		t = Eof()
 	case '=':
@@ -152,12 +186,19 @@ func (tz *Tokenizer) Tokenize() []Token {
 
 	for {
 		t := tz.Next()
+		tokens = append(tokens, t)
+
+		// Stop if we reach EOF, but include it in the tokens.
 		if t.Type == EOF {
 			break
 		}
-
-		tokens = append(tokens, t)
 	}
 
 	return tokens
+}
+
+// isLetter checks if the given character is a letter (a-z, A-Z) or underscore.
+// These are valid characters for identifiers in Monkey.
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }

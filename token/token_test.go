@@ -6,25 +6,43 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_Tokenizer_Identifier(t *testing.T) {
+	assert.Equal(t, "aAbBcC_", NewTokenizer("aAbBcC_ = 0;").Identifier())
+}
+
 func Test_Tokenizer_Tokenize_Empty(t *testing.T) {
-	expected := []Token{}
+	expected := []Token{
+		Eof(),
+	}
 
 	actual := NewTokenizer("").Tokenize()
 	assert.Equal(t, expected, actual)
 }
 
-func Test_Tokenizer_Tokenize_kitchensink(t *testing.T) {
+func Test_Tokenizer_Tokenize_TokenTypes(t *testing.T) {
 	expected := []Token{
-		{Type: ASSIGN, Literal: "="},
-		{Type: PLUS, Literal: "+"},
-		{Type: LPAREN, Literal: "("},
-		{Type: RPAREN, Literal: ")"},
-		{Type: LBRACE, Literal: "{"},
-		{Type: RBRACE, Literal: "}"},
-		{Type: COMMA, Literal: ","},
-		{Type: SEMICOLON, Literal: ";"},
+		Assignment(),
+		Plus(),
+		LeftParenthesis(),
+		RightParenthesis(),
+		LeftBrace(),
+		RightBrace(),
+		Comma(),
+		Semicolon(),
+		Eof(),
 	}
 
 	actual := NewTokenizer("=+(){},;").Tokenize()
+	assert.Equal(t, expected, actual)
+}
+
+func Test_Tokenizer_Tokenize_Keywords(t *testing.T) {
+	expected := []Token{
+		Function(),
+		Let(),
+		Eof(),
+	}
+
+	actual := NewTokenizer("fn let").Tokenize()
 	assert.Equal(t, expected, actual)
 }
