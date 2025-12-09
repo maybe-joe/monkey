@@ -1,0 +1,119 @@
+package token
+
+// Tokenizer, converts a string of monkey code into tokens.
+type Tokenizer struct {
+	// code, program string to tokenize.
+	code string
+	// char, current char under examination.
+	// If the end of code is reached, 0 is used to represent 'EOF'.
+	char byte
+	// cursor, the index of char in the code.
+	cursor int
+	// peek, one char lookahead.
+	peek int
+}
+
+// NewTokenizer creates a new Tokenizer for the given code.
+func NewTokenizer(code string) *Tokenizer {
+	tz := &Tokenizer{
+		code:   code,
+		cursor: 0,
+		peek:   1,
+		char:   0, // EOF
+	}
+
+	// Prevent reading out of bounds.
+	if len(tz.code) > 0 {
+		tz.char = tz.code[0]
+	}
+
+	return tz
+}
+
+// Advance the tokenizer to the next character.
+func (tz *Tokenizer) Advance() {
+	if tz.peek >= len(tz.code) {
+		tz.char = 0
+	} else {
+		tz.char = tz.code[tz.peek]
+	}
+
+	tz.cursor = tz.peek
+	tz.peek++
+}
+
+// Identifier, reads an identifier from the code and returns it as a Token.
+func (tz *Tokenizer) Identifier() string {
+	start := tz.cursor
+
+	for isLetter(tz.char) {
+		tz.Advance()
+	}
+
+	return tz.code[start:tz.cursor]
+}
+
+// Next returns the next token from the code and advances the tokenizer.
+func (tz *Tokenizer) Next() Token {
+	var t Token
+
+	switch tz.char {
+	default:
+		if isLetter(tz.char) {
+			switch literal := tz.Identifier(); literal {
+			default:
+				t = Identifier(literal)
+			case "fn":
+				t = Function()
+			case "let":
+				t = Let()
+			}
+		} else {
+			t = Illegal()
+		}
+	case 0:
+		t = Eof()
+	case '=':
+		t = Assignment()
+	case '+':
+		t = Plus()
+	case '(':
+		t = LeftParenthesis()
+	case ')':
+		t = RightParenthesis()
+	case '{':
+		t = LeftBrace()
+	case '}':
+		t = RightBrace()
+	case ',':
+		t = Comma()
+	case ';':
+		t = Semicolon()
+	}
+
+	tz.Advance()
+	return t
+}
+
+// Tokenize processes the entire input code and returns a slice of tokens.
+func (tz *Tokenizer) Tokenize() []Token {
+	tokens := make([]Token, 0, 100)
+
+	for {
+		t := tz.Next()
+		tokens = append(tokens, t)
+
+		// Stop if we reach EOF, but include it in the tokens.
+		if t.Type == EOF {
+			break
+		}
+	}
+
+	return tokens
+}
+
+// isLetter checks if the given character is a letter (a-z, A-Z) or underscore.
+// These are valid characters for identifiers in Monkey.
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}

@@ -46,3 +46,16 @@ func Test_Tokenizer_Tokenize_Keywords(t *testing.T) {
 	actual := NewTokenizer("fn let").Tokenize()
 	assert.Equal(t, expected, actual)
 }
+
+func Test_Tokenizer_Tokenize_Code(t *testing.T) {
+	const code = `
+		let five = 5;
+		let ten = 10;
+
+		let add = fn(x, y) {
+		  x + y;
+		};
+
+		let result = add(five, ten);
+	`
+}
