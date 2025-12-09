@@ -127,6 +127,16 @@ func (tz *Tokenizer) Next() Token {
 				return Function()
 			case "let":
 				return Let()
+			case "if":
+				return If()
+			case "else":
+				return Else()
+			case "return":
+				return Return()
+			case "true":
+				return True()
+			case "false":
+				return False()
 			}
 		} else if isDigit(tz.char) {
 			return Integer(tz.Number())

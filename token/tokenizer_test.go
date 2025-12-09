@@ -56,6 +56,12 @@ func Test_Tokenizer_Tokenize_SimpleProgram(t *testing.T) {
 		};
 
 		let result = add(five, ten);
+
+		if (5 < 10) {
+			return true;
+		} else {
+			return false;
+		}
 	`
 
 	expected := []Token{
@@ -70,6 +76,14 @@ func Test_Tokenizer_Tokenize_SimpleProgram(t *testing.T) {
 		Identifier("add"), LeftParenthesis(),
 		Identifier("five"), Comma(), Identifier("ten"), RightParenthesis(),
 		Semicolon(),
+		If(), LeftParenthesis(), Integer("5"), LessThan(), Integer("10"), RightParenthesis(),
+		LeftBrace(),
+		Return(), True(), Semicolon(),
+		RightBrace(),
+		Else(),
+		LeftBrace(),
+		Return(), False(), Semicolon(),
+		RightBrace(),
 		Eof(),
 	}
 

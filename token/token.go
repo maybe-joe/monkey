@@ -34,6 +34,11 @@ const (
 	// Keywords
 	FUNCTION TokenType = "FUNCTION"
 	LET      TokenType = "LET"
+	TRUE     TokenType = "TRUE"
+	FALSE    TokenType = "FALSE"
+	IF       TokenType = "IF"
+	ELSE     TokenType = "ELSE"
+	RETURN   TokenType = "RETURN"
 )
 
 type Token struct {
@@ -105,6 +110,14 @@ func Semicolon() Token {
 	return Token{Type: SEMICOLON, Literal: ";"}
 }
 
+func Integer(literal string) Token {
+	return Token{Type: INT, Literal: literal}
+}
+
+func Identifier(literal string) Token {
+	return Token{Type: IDENT, Literal: literal}
+}
+
 func Function() Token {
 	return Token{Type: FUNCTION, Literal: "FUNCTION"}
 }
@@ -113,10 +126,22 @@ func Let() Token {
 	return Token{Type: LET, Literal: "LET"}
 }
 
-func Identifier(literal string) Token {
-	return Token{Type: IDENT, Literal: literal}
+func True() Token {
+	return Token{Type: TRUE, Literal: "TRUE"}
 }
 
-func Integer(literal string) Token {
-	return Token{Type: INT, Literal: literal}
+func False() Token {
+	return Token{Type: FALSE, Literal: "FALSE"}
+}
+
+func If() Token {
+	return Token{Type: IF, Literal: "IF"}
+}
+
+func Else() Token {
+	return Token{Type: ELSE, Literal: "ELSE"}
+}
+
+func Return() Token {
+	return Token{Type: RETURN, Literal: "RETURN"}
 }
