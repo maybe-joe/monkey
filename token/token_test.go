@@ -6,7 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Tokenizer_Tokenize(t *testing.T) {
+func Test_Tokenizer_Tokenize_Empty(t *testing.T) {
+	expected := []Token{}
+
+	actual := NewTokenizer("").Tokenize()
+	assert.Equal(t, expected, actual)
+}
+
+func Test_Tokenizer_Tokenize_kitchensink(t *testing.T) {
 	expected := []Token{
 		{Type: ASSIGN, Literal: "="},
 		{Type: PLUS, Literal: "+"},
