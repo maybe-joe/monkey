@@ -51,4 +51,21 @@ func Test_Tokenizer_Tokenize_SimpleProgram(t *testing.T) {
 
 		let result = add(five, ten);
 	`
+
+	expected := []Token{
+		Let(), Identifier("five"), Assignment(), Integer("5"), Semicolon(),
+		Let(), Identifier("ten"), Assignment(), Integer("10"), Semicolon(),
+		Let(), Identifier("add"), Assignment(), Function(), LeftParenthesis(),
+		Identifier("x"), Comma(), Identifier("y"), RightParenthesis(),
+		LeftBrace(),
+		Identifier("x"), Plus(), Identifier("y"), Semicolon(),
+		RightBrace(), Semicolon(),
+		Let(), Identifier("result"), Assignment(),
+		Identifier("add"), LeftParenthesis(),
+		Identifier("five"), Comma(), Identifier("ten"), RightParenthesis(),
+		Semicolon(),
+		Eof(),
+	}
+
+	assert.Equal(t, expected, NewTokenizer(code).Tokenize())
 }
