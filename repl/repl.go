@@ -10,6 +10,7 @@ import (
 
 const prompt = ">> "
 
+// let add = fn(x, y) { x + y; };
 func Run(in io.Reader, out io.Writer) error {
 	scanner := bufio.NewScanner(in)
 
@@ -20,7 +21,7 @@ func Run(in io.Reader, out io.Writer) error {
 		}
 
 		for _, t := range token.NewTokenizer(scanner.Text()).Tokenize() {
-			fmt.Fprintf(out, "%+v\n", t)
+			fmt.Fprintf(out, "%s\n", t)
 		}
 	}
 

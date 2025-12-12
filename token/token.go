@@ -48,76 +48,112 @@ type Token struct {
 	Literal string
 }
 
+func (t Token) String() string {
+	if len(t.Literal) > 0 {
+		return string(t.Type) + " " + t.Literal
+	} else {
+		return string(t.Type)
+	}
+}
+
 func Illegal(literal byte) Token {
 	return Token{Type: ILLEGAL, Literal: string(literal)}
 }
 
 func Eof() Token {
-	return Token{Type: EOF, Literal: ""}
+	return Token{Type: EOF}
 }
 
 func Assignment() Token {
-	return Token{Type: ASSIGN, Literal: "="}
+	return Token{Type: ASSIGN}
 }
 
 func Plus() Token {
-	return Token{Type: PLUS, Literal: "+"}
+	return Token{Type: PLUS}
 }
 
 func Minus() Token {
-	return Token{Type: MINUS, Literal: "-"}
+	return Token{Type: MINUS}
 }
 
 func Bang() Token {
-	return Token{Type: BANG, Literal: "!"}
+	return Token{Type: BANG}
 }
 
 func Asterisk() Token {
-	return Token{Type: ASTERISK, Literal: "*"}
+	return Token{Type: ASTERISK}
 }
 
 func Slash() Token {
-	return Token{Type: SLASH, Literal: "/"}
+	return Token{Type: SLASH}
 }
 
 func LessThan() Token {
-	return Token{Type: LT, Literal: "<"}
+	return Token{Type: LT}
 }
 
 func GreaterThan() Token {
-	return Token{Type: GT, Literal: ">"}
+	return Token{Type: GT}
 }
 
 func Equal() Token {
-	return Token{Type: EQ, Literal: "=="}
+	return Token{Type: EQ}
 }
 
 func NotEqual() Token {
-	return Token{Type: NOT_EQ, Literal: "!="}
+	return Token{Type: NOT_EQ}
 }
 
 func LeftParenthesis() Token {
-	return Token{Type: LPAREN, Literal: "("}
+	return Token{Type: LPAREN}
 }
 
 func RightParenthesis() Token {
-	return Token{Type: RPAREN, Literal: ")"}
+	return Token{Type: RPAREN}
 }
 
 func LeftBrace() Token {
-	return Token{Type: LBRACE, Literal: "{"}
+	return Token{Type: LBRACE}
 }
 
 func RightBrace() Token {
-	return Token{Type: RBRACE, Literal: "}"}
+	return Token{Type: RBRACE}
 }
 
 func Comma() Token {
-	return Token{Type: COMMA, Literal: ","}
+	return Token{Type: COMMA}
 }
 
 func Semicolon() Token {
-	return Token{Type: SEMICOLON, Literal: ";"}
+	return Token{Type: SEMICOLON}
+}
+
+func Function() Token {
+	return Token{Type: FUNCTION}
+}
+
+func Let() Token {
+	return Token{Type: LET}
+}
+
+func True() Token {
+	return Token{Type: TRUE}
+}
+
+func False() Token {
+	return Token{Type: FALSE}
+}
+
+func If() Token {
+	return Token{Type: IF}
+}
+
+func Else() Token {
+	return Token{Type: ELSE}
+}
+
+func Return() Token {
+	return Token{Type: RETURN}
 }
 
 func Integer(literal string) Token {
@@ -126,32 +162,4 @@ func Integer(literal string) Token {
 
 func Identifier(literal string) Token {
 	return Token{Type: IDENT, Literal: literal}
-}
-
-func Function() Token {
-	return Token{Type: FUNCTION, Literal: "FUNCTION"}
-}
-
-func Let() Token {
-	return Token{Type: LET, Literal: "LET"}
-}
-
-func True() Token {
-	return Token{Type: TRUE, Literal: "TRUE"}
-}
-
-func False() Token {
-	return Token{Type: FALSE, Literal: "FALSE"}
-}
-
-func If() Token {
-	return Token{Type: IF, Literal: "IF"}
-}
-
-func Else() Token {
-	return Token{Type: ELSE, Literal: "ELSE"}
-}
-
-func Return() Token {
-	return Token{Type: RETURN, Literal: "RETURN"}
 }
