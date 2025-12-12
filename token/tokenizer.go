@@ -90,14 +90,10 @@ func (tz *Tokenizer) Next() Token {
 	switch tz.char {
 	case 0:
 		t = Eof()
-	case '=':
-		t = Assignment()
 	case '+':
 		t = Plus()
 	case '-':
 		t = Minus()
-	case '!':
-		t = Bang()
 	case '*':
 		t = Asterisk()
 	case '/':
@@ -118,6 +114,20 @@ func (tz *Tokenizer) Next() Token {
 		t = Comma()
 	case ';':
 		t = Semicolon()
+	case '=':
+		if tz.Peek() == '=' {
+			tz.Advance()
+			t = Equal()
+		} else {
+			t = Assignment()
+		}
+	case '!':
+		if tz.Peek() == '=' {
+			tz.Advance()
+			t = NotEqual()
+		} else {
+			t = Bang()
+		}
 	default:
 		if isLetter(tz.char) {
 			switch literal := tz.Identifier(); literal {

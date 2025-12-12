@@ -19,8 +19,10 @@ const (
 	SLASH    TokenType = "/"
 
 	// Comparisons
-	LT TokenType = "<"
-	GT TokenType = ">"
+	LT     TokenType = "<"
+	GT     TokenType = ">"
+	EQ     TokenType = "=="
+	NOT_EQ TokenType = "!="
 
 	// Delimiters
 	COMMA     TokenType = ","
@@ -84,6 +86,14 @@ func LessThan() Token {
 
 func GreaterThan() Token {
 	return Token{Type: GT, Literal: ">"}
+}
+
+func Equal() Token {
+	return Token{Type: EQ, Literal: "=="}
+}
+
+func NotEqual() Token {
+	return Token{Type: NOT_EQ, Literal: "!="}
 }
 
 func LeftParenthesis() Token {

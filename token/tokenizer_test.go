@@ -11,7 +11,7 @@ func Test_Tokenizer_Empty(t *testing.T) {
 }
 
 func Test_Tokenizer_Next(t *testing.T) {
-	tz := NewTokenizer("=+(){},;fn let aAbBcC_ 9 1!-/*<>")
+	tz := NewTokenizer("= + ( ) { } , ; fn let aAbBcC_ 9 1 ! - / * < > == !=")
 
 	testcases := []struct {
 		name     string
@@ -36,6 +36,8 @@ func Test_Tokenizer_Next(t *testing.T) {
 		{"Asterisk", Asterisk()},
 		{"Less Than", LessThan()},
 		{"Greater Than", GreaterThan()},
+		{"Equal", Equal()},
+		{"Not Equal", NotEqual()},
 		{"Eof", Eof()},
 	}
 
