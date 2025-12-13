@@ -48,6 +48,10 @@ type Token struct {
 	Literal string
 }
 
+func (t Token) Is(typ TokenType) bool {
+	return t.Type == typ
+}
+
 func (t Token) String() string {
 	if len(t.Literal) > 0 {
 		return string(t.Type) + " " + t.Literal
