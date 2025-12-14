@@ -17,14 +17,14 @@ func Test_Writer_Write(t *testing.T) {
 		{name: "true", given: True(), expected: "true"},
 		{name: "false", given: False(), expected: "false"},
 		{name: "identifier", given: Identifier("foobar"), expected: "foobar"},
-		{name: "block", given: Block(Return(Identifier("x"))), expected: "{return x;}"},
+		{name: "block", given: Block(Return(Identifier("x"))), expected: "{\n\treturn x;\n}"},
 		{name: "return", given: Return(Identifier("x")), expected: "return x;"},
-		{name: "let", given: Let(Identifier("x"), Integer(10)), expected: "let x = 10;"},
+		{name: "let", given: Let(Identifier("x"), Integer(10)), expected: "let x = 10;\n"},
 		{name: "call", given: Call(Identifier("add"), Integer(1), Integer(2)), expected: "add(1, 2)"},
 		{name: "prefix", given: Prefix("-", Integer(5)), expected: "-5"},
 		{name: "infix", given: Infix(Integer(5), "+", Integer(5)), expected: "(5 + 5)"},
-		{name: "function", given: Function(Block(Return(Identifier("x"))), Identifier("x")), expected: "fn(x) {return x;}"},
-		{name: "if", given: If(Infix(Identifier("x"), "<", Integer(10)), Block(Return(True())), Block(Return(False()))), expected: "if (x < 10) {return true;} else {return false;}"},
+		{name: "function", given: Function(Block(Return(Identifier("x"))), Identifier("x")), expected: "fn(x) {\n\treturn x;\n}"},
+		{name: "if", given: If(Infix(Identifier("x"), "<", Integer(10)), Block(Return(True())), Block(Return(False()))), expected: "if (x < 10) {\n\treturn true;\n} else {\n\treturn false;\n}"},
 		{name: "expression statement", given: ExpressionStatement(Infix(Integer(5), "+", Integer(5))), expected: "(5 + 5)"},
 	}
 
@@ -82,6 +82,13 @@ func Test_Writer_Simple(t *testing.T) {
 	var buf bytes.Buffer
 	NewWriter(&buf).Write(given)
 
-	expected := `let add = fn(x, y) {return (x + y);};let invert = fn(x) {return -x;};let result = add(invert(5), invert(10));`
+	expected := `let add = fn(x, y) {
+	return (x + y);
+};
+let invert = fn(x) {
+	return -x;
+};
+let result = add(invert(5), invert(10));
+`
 	assert.Equal(t, expected, buf.String())
 }

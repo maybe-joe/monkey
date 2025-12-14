@@ -3,14 +3,16 @@ package ast
 import (
 	"fmt"
 	"io"
+	"strings"
 )
 
 type Writer struct {
 	writer io.Writer
+	indent int
 }
 
 func NewWriter(w io.Writer) *Writer {
-	return &Writer{writer: w}
+	return &Writer{writer: w, indent: 0}
 }
 
 func (w *Writer) Write(node Node) {
@@ -48,6 +50,10 @@ func (w *Writer) Write(node Node) {
 	}
 }
 
+func (w *Writer) Indentation() string {
+	return strings.Repeat("\t", w.indent)
+}
+
 func (w *Writer) Integer(node *IntegerNode) {
 	fmt.Fprintf(w.writer, "%d", node.Value)
 }
@@ -65,11 +71,14 @@ func (w *Writer) Identifier(node *IdentifierNode) {
 }
 
 func (w *Writer) Block(node *BlockNode) {
-	fmt.Fprint(w.writer, "{")
+	fmt.Fprint(w.writer, "{\n")
+	w.indent++
 	for _, stmt := range node.Statements {
+		fmt.Fprint(w.writer, w.Indentation())
 		w.Write(stmt)
 	}
-	fmt.Fprint(w.writer, "}")
+	w.indent--
+	fmt.Fprint(w.writer, "\n}")
 }
 
 func (w *Writer) Return(node *ReturnNode) {
@@ -83,7 +92,7 @@ func (w *Writer) Let(node *LetNode) {
 	w.Identifier(node.Identifier)
 	fmt.Fprint(w.writer, " = ")
 	w.Write(node.Value)
-	fmt.Fprint(w.writer, ";")
+	fmt.Fprint(w.writer, ";\n")
 }
 
 func (w *Writer) Call(node *CallNode) {
