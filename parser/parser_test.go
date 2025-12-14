@@ -18,25 +18,25 @@ func Test_Program(t *testing.T) {
 		foobar;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.Let{
-				Identifier: &ast.Identifier{Value: "x"},
-				Value:      &ast.Integer{Value: 5},
+			&ast.LetNode{
+				Identifier: &ast.IdentifierNode{Value: "x"},
+				Value:      &ast.IntegerNode{Value: 5},
 			},
-			&ast.Let{
-				Identifier: &ast.Identifier{Value: "y"},
-				Value:      &ast.Integer{Value: 10},
+			&ast.LetNode{
+				Identifier: &ast.IdentifierNode{Value: "y"},
+				Value:      &ast.IntegerNode{Value: 10},
 			},
-			&ast.Let{
-				Identifier: &ast.Identifier{Value: "foobar"},
-				Value:      &ast.Integer{Value: 838383},
+			&ast.LetNode{
+				Identifier: &ast.IdentifierNode{Value: "foobar"},
+				Value:      &ast.IntegerNode{Value: 838383},
 			},
-			&ast.Return{
-				Value: &ast.Integer{Value: 5},
+			&ast.ReturnNode{
+				Value: &ast.IntegerNode{Value: 5},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Identifier{Value: "foobar"},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.IdentifierNode{Value: "foobar"},
 			},
 		},
 	}
@@ -51,15 +51,15 @@ func Test_Let(t *testing.T) {
 		let y = x;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.Let{
-				Identifier: &ast.Identifier{Value: "x"},
-				Value:      &ast.Integer{Value: 67},
+			&ast.LetNode{
+				Identifier: &ast.IdentifierNode{Value: "x"},
+				Value:      &ast.IntegerNode{Value: 67},
 			},
-			&ast.Let{
-				Identifier: &ast.Identifier{Value: "y"},
-				Value:      &ast.Identifier{Value: "x"},
+			&ast.LetNode{
+				Identifier: &ast.IdentifierNode{Value: "y"},
+				Value:      &ast.IdentifierNode{Value: "x"},
 			},
 		},
 	}
@@ -74,13 +74,13 @@ func Test_Return(t *testing.T) {
 		return x;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.Return{
-				Value: &ast.Integer{Value: 67},
+			&ast.ReturnNode{
+				Value: &ast.IntegerNode{Value: 67},
 			},
-			&ast.Return{
-				Value: &ast.Identifier{Value: "x"},
+			&ast.ReturnNode{
+				Value: &ast.IdentifierNode{Value: "x"},
 			},
 		},
 	}
@@ -95,18 +95,18 @@ func Test_Prefix(t *testing.T) {
 		-15;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Prefix{
+			&ast.ExpressionStatementNode{
+				Expression: &ast.PrefixNode{
 					Operator: "!",
-					Right:    &ast.Integer{Value: 5},
+					Right:    &ast.IntegerNode{Value: 5},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Prefix{
+			&ast.ExpressionStatementNode{
+				Expression: &ast.PrefixNode{
 					Operator: "-",
-					Right:    &ast.Integer{Value: 15},
+					Right:    &ast.IntegerNode{Value: 15},
 				},
 			},
 		},
@@ -128,62 +128,62 @@ func Test_Infix(t *testing.T) {
 		7 != 9;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 5},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 5},
 					Operator: "+",
-					Right:    &ast.Integer{Value: 5},
+					Right:    &ast.IntegerNode{Value: 5},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 10},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 10},
 					Operator: "-",
-					Right:    &ast.Integer{Value: 2},
+					Right:    &ast.IntegerNode{Value: 2},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 3},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 3},
 					Operator: "*",
-					Right:    &ast.Integer{Value: 4},
+					Right:    &ast.IntegerNode{Value: 4},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 8},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 8},
 					Operator: "/",
-					Right:    &ast.Integer{Value: 2},
+					Right:    &ast.IntegerNode{Value: 2},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 5},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 5},
 					Operator: ">",
-					Right:    &ast.Integer{Value: 3},
+					Right:    &ast.IntegerNode{Value: 3},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 2},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 2},
 					Operator: "<",
-					Right:    &ast.Integer{Value: 4},
+					Right:    &ast.IntegerNode{Value: 4},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 6},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 6},
 					Operator: "==",
-					Right:    &ast.Integer{Value: 6},
+					Right:    &ast.IntegerNode{Value: 6},
 				},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left:     &ast.Integer{Value: 7},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left:     &ast.IntegerNode{Value: 7},
 					Operator: "!=",
-					Right:    &ast.Integer{Value: 9},
+					Right:    &ast.IntegerNode{Value: 9},
 				},
 			},
 		},
@@ -199,13 +199,13 @@ func Test_Boolean(t *testing.T) {
 		false;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Boolean{Value: true},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.BooleanNode{Value: true},
 			},
-			&ast.ExpressionStatement{
-				Expression: &ast.Boolean{Value: false},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.BooleanNode{Value: false},
 			},
 		},
 	}
@@ -219,17 +219,17 @@ func Test_Group(t *testing.T) {
 		(5 + 5) * 2;
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Infix{
-					Left: &ast.Infix{
-						Left:     &ast.Integer{Value: 5},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.InfixNode{
+					Left: &ast.InfixNode{
+						Left:     &ast.IntegerNode{Value: 5},
 						Operator: "+",
-						Right:    &ast.Integer{Value: 5},
+						Right:    &ast.IntegerNode{Value: 5},
 					},
 					Operator: "*",
-					Right:    &ast.Integer{Value: 2},
+					Right:    &ast.IntegerNode{Value: 2},
 				},
 			},
 		},
@@ -244,26 +244,26 @@ func Test_If(t *testing.T) {
 		if (x < y) { x } else { y }
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.If{
-					Condition: &ast.Infix{
-						Left:     &ast.Identifier{Value: "x"},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.IfNode{
+					Condition: &ast.InfixNode{
+						Left:     &ast.IdentifierNode{Value: "x"},
 						Operator: "<",
-						Right:    &ast.Identifier{Value: "y"},
+						Right:    &ast.IdentifierNode{Value: "y"},
 					},
-					Consequence: &ast.Block{
+					Consequence: &ast.BlockNode{
 						Statements: []ast.Statement{
-							&ast.ExpressionStatement{
-								Expression: &ast.Identifier{Value: "x"},
+							&ast.ExpressionStatementNode{
+								Expression: &ast.IdentifierNode{Value: "x"},
 							},
 						},
 					},
-					Alternative: &ast.Block{
+					Alternative: &ast.BlockNode{
 						Statements: []ast.Statement{
-							&ast.ExpressionStatement{
-								Expression: &ast.Identifier{Value: "y"},
+							&ast.ExpressionStatementNode{
+								Expression: &ast.IdentifierNode{Value: "y"},
 							},
 						},
 					},
@@ -281,21 +281,21 @@ func Test_Function(t *testing.T) {
 		fn(x, y) { x + y; }
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Function{
-					Parameters: []*ast.Identifier{
+			&ast.ExpressionStatementNode{
+				Expression: &ast.FunctionNode{
+					Parameters: []*ast.IdentifierNode{
 						{Value: "x"},
 						{Value: "y"},
 					},
-					Body: &ast.Block{
+					Body: &ast.BlockNode{
 						Statements: []ast.Statement{
-							&ast.ExpressionStatement{
-								Expression: &ast.Infix{
-									Left:     &ast.Identifier{Value: "x"},
+							&ast.ExpressionStatementNode{
+								Expression: &ast.InfixNode{
+									Left:     &ast.IdentifierNode{Value: "x"},
 									Operator: "+",
-									Right:    &ast.Identifier{Value: "y"},
+									Right:    &ast.IdentifierNode{Value: "y"},
 								},
 							},
 						},
@@ -314,22 +314,22 @@ func Test_Call(t *testing.T) {
 		add(1, 2 + 3, 4 * 5);
 	`
 
-	expected := &ast.Root{
+	expected := &ast.RootNode{
 		Statements: []ast.Statement{
-			&ast.ExpressionStatement{
-				Expression: &ast.Call{
-					Function: &ast.Identifier{Value: "add"},
+			&ast.ExpressionStatementNode{
+				Expression: &ast.CallNode{
+					Function: &ast.IdentifierNode{Value: "add"},
 					Arguments: []ast.Expression{
-						&ast.Integer{Value: 1},
-						&ast.Infix{
-							Left:     &ast.Integer{Value: 2},
+						&ast.IntegerNode{Value: 1},
+						&ast.InfixNode{
+							Left:     &ast.IntegerNode{Value: 2},
 							Operator: "+",
-							Right:    &ast.Integer{Value: 3},
+							Right:    &ast.IntegerNode{Value: 3},
 						},
-						&ast.Infix{
-							Left:     &ast.Integer{Value: 4},
+						&ast.InfixNode{
+							Left:     &ast.IntegerNode{Value: 4},
 							Operator: "*",
-							Right:    &ast.Integer{Value: 5},
+							Right:    &ast.IntegerNode{Value: 5},
 						},
 					},
 				},

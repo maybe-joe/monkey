@@ -94,7 +94,7 @@ func New(tokenizer Tokenizer) *Parser {
 	return p
 }
 
-func (p *Parser) Let() *ast.Let {
+func (p *Parser) Let() *ast.LetNode {
 	// If the next token is not an identifier the code is invalid.
 	if !p.next.Is(token.IDENT) {
 		return nil
@@ -104,7 +104,7 @@ func (p *Parser) Let() *ast.Let {
 	p.Next()
 
 	// Create the identifier node.
-	id := ast.Identifier{
+	id := ast.IdentifierNode{
 		Value: p.current.Literal,
 	}
 
@@ -125,13 +125,13 @@ func (p *Parser) Let() *ast.Let {
 		p.Next()
 	}
 
-	return &ast.Let{
+	return &ast.LetNode{
 		Identifier: &id,
 		Value:      expr,
 	}
 }
 
-func (p *Parser) Return() *ast.Return {
+func (p *Parser) Return() *ast.ReturnNode {
 	// Advance to the expression token.
 	p.Next()
 
@@ -143,7 +143,7 @@ func (p *Parser) Return() *ast.Return {
 		p.Next()
 	}
 
-	return &ast.Return{
+	return &ast.ReturnNode{
 		Value: expr,
 	}
 }
@@ -172,7 +172,7 @@ func (p *Parser) If() ast.Expression {
 
 	consequence := p.Block()
 
-	var alternative *ast.Block
+	var alternative *ast.BlockNode
 	if p.next.Is(token.ELSE) {
 		p.Next()
 
@@ -185,14 +185,14 @@ func (p *Parser) If() ast.Expression {
 		alternative = p.Block()
 	}
 
-	return &ast.If{
+	return &ast.IfNode{
 		Condition:   condition,
 		Consequence: consequence,
 		Alternative: alternative,
 	}
 }
 
-func (p *Parser) Block() *ast.Block {
+func (p *Parser) Block() *ast.BlockNode {
 	stmts := []ast.Statement{}
 
 	p.Next()
@@ -204,13 +204,13 @@ func (p *Parser) Block() *ast.Block {
 		p.Next()
 	}
 
-	return &ast.Block{
+	return &ast.BlockNode{
 		Statements: stmts,
 	}
 }
 
 func (p *Parser) Identifier() ast.Expression {
-	return &ast.Identifier{
+	return &ast.IdentifierNode{
 		Value: p.current.Literal,
 	}
 }
@@ -222,19 +222,19 @@ func (p *Parser) Integer() ast.Expression {
 		return nil
 	}
 
-	return &ast.Integer{
+	return &ast.IntegerNode{
 		Value: i,
 	}
 }
 
 func (p *Parser) Boolean() ast.Expression {
-	return &ast.Boolean{
+	return &ast.BooleanNode{
 		Value: p.current.Is(token.TRUE),
 	}
 }
 
 func (p *Parser) Call(function ast.Expression) ast.Expression {
-	return &ast.Call{
+	return &ast.CallNode{
 		Function:  function,
 		Arguments: p.Arguments(),
 	}
@@ -283,13 +283,13 @@ func (p *Parser) Function() ast.Expression {
 
 	body := p.Block()
 
-	return &ast.Function{
+	return &ast.FunctionNode{
 		Parameters: parameters,
 		Body:       body,
 	}
 }
 
-func (p *Parser) Parameters() []*ast.Identifier {
+func (p *Parser) Parameters() []*ast.IdentifierNode {
 	if p.next.Is(token.RPAREN) {
 		p.Next()
 		return nil
@@ -297,14 +297,14 @@ func (p *Parser) Parameters() []*ast.Identifier {
 
 	p.Next()
 
-	identifiers := []*ast.Identifier{
+	identifiers := []*ast.IdentifierNode{
 		{Value: p.current.Literal},
 	}
 
 	for p.next.Is(token.COMMA) {
 		p.Next()
 		p.Next()
-		identifiers = append(identifiers, &ast.Identifier{Value: p.current.Literal})
+		identifiers = append(identifiers, &ast.IdentifierNode{Value: p.current.Literal})
 	}
 
 	if !p.next.Is(token.RPAREN) {
@@ -331,7 +331,7 @@ func (p *Parser) Group() ast.Expression {
 }
 
 func (p *Parser) Prefix() ast.Expression {
-	expr := &ast.Prefix{
+	expr := &ast.PrefixNode{
 		Operator: p.current.String(),
 	}
 
@@ -343,7 +343,7 @@ func (p *Parser) Prefix() ast.Expression {
 }
 
 func (p *Parser) Infix(left ast.Expression) ast.Expression {
-	expr := &ast.Infix{
+	expr := &ast.InfixNode{
 		Left:     left,
 		Operator: p.current.String(),
 	}
@@ -381,14 +381,14 @@ func (p *Parser) Expression(precedence int) ast.Expression {
 	return expr
 }
 
-func (p *Parser) ExpressionStatement() *ast.ExpressionStatement {
+func (p *Parser) ExpressionStatement() *ast.ExpressionStatementNode {
 	expr := p.Expression(LOWEST)
 
 	if p.next.Is(token.SEMICOLON) {
 		p.Next()
 	}
 
-	return &ast.ExpressionStatement{
+	return &ast.ExpressionStatementNode{
 		Expression: expr,
 	}
 }
@@ -415,8 +415,8 @@ func (p *Parser) Until(typ token.TokenType) {
 	}
 }
 
-func (p *Parser) Parse() *ast.Root {
-	root := &ast.Root{}
+func (p *Parser) Parse() *ast.RootNode {
+	root := &ast.RootNode{}
 
 	for p.current.Type != token.EOF {
 		if stmt := p.Statement(); stmt != nil {
