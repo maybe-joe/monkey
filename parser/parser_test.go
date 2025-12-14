@@ -13,6 +13,8 @@ func Test_Program(t *testing.T) {
 		let x = 5;
 		let y = 10;
 		let foobar = 838383;
+
+		return 5;
 	`
 
 	expected := &Root{
@@ -28,6 +30,9 @@ func Test_Program(t *testing.T) {
 			&Let{
 				Identifier: &Identifier{Value: "foobar"},
 				// Value:      &IntegerLiteral{Value: 838383},
+			},
+			&Return{
+				// Value: &IntegerLiteral{Value: 5},
 			},
 		},
 	}
@@ -89,5 +94,24 @@ func Test_Let(t *testing.T) {
 
 		require.Len(t, p.errors, 1)
 		assert.Equal(t, ErrExpectedSemicolon, p.errors[0])
+	})
+}
+
+func Test_Return(t *testing.T) {
+	t.Run("happy path", func(t *testing.T) {
+		given := `
+			return 5;
+		`
+
+		expected := &Root{
+			Statements: []Statement{
+				&Return{
+					// Value: &IntegerLiteral{Value: 5},
+				},
+			},
+		}
+
+		actual := New(token.NewTokenizer(given)).Parse()
+		assert.Equal(t, expected, actual)
 	})
 }

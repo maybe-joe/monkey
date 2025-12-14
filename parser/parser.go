@@ -75,12 +75,36 @@ func (p *Parser) Let() *Let {
 	}
 }
 
+func (p *Parser) Return() *Return {
+	// Advance to the expression token.
+	p.Next()
+
+	// For now we will skip the expression until we reach a semicolon.
+	for !(p.next.Is(token.SEMICOLON) || p.next.Is(token.EOF)) {
+		p.Next()
+	}
+
+	// Advance to the semicolon.
+	p.Next()
+
+	if !p.current.Is(token.SEMICOLON) {
+		p.errors = append(p.errors, ErrExpectedSemicolon)
+		return nil
+	}
+
+	return &Return{
+		// Value: &IntegerLiteral{Value: 5},
+	}
+}
+
 func (p *Parser) Statement() Statement {
 	switch p.current.Type {
 	default:
 		return nil
 	case token.LET:
 		return p.Let()
+	case token.RETURN:
+		return p.Return()
 	}
 }
 

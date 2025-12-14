@@ -46,3 +46,13 @@ func (n *Identifier) expression() {}
 func (n *Identifier) Literal() string {
 	return n.Value
 }
+
+type Return struct {
+	Value Expression
+}
+
+func (n *Return) statement() {}
+
+func (n *Return) Literal() string {
+	return "return"
+}
