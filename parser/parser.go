@@ -58,7 +58,7 @@ func (p *Parser) Let() *Let {
 	p.Next()
 
 	// For now we will skip the expression until we reach a semicolon.
-	for !p.next.Is(token.SEMICOLON) || p.next.Is(token.EOF) {
+	for !(p.next.Is(token.SEMICOLON) || p.next.Is(token.EOF)) {
 		p.Next()
 	}
 
