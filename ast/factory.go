@@ -20,8 +20,12 @@ func Block(statements ...Statement) *BlockNode {
 	return &BlockNode{Statements: statements}
 }
 
-func Function(parameters []*IdentifierNode, body *BlockNode) *FunctionNode {
+func Function(body *BlockNode, parameters ...*IdentifierNode) *FunctionNode {
 	return &FunctionNode{Parameters: parameters, Body: body}
+}
+
+func Call(function Expression, arguments ...Expression) *CallNode {
+	return &CallNode{Function: function, Arguments: arguments}
 }
 
 func Identifier(value string) *IdentifierNode {
@@ -39,10 +43,6 @@ func True() *BooleanNode {
 
 func False() *BooleanNode {
 	return &BooleanNode{Value: false}
-}
-
-func Call(function Expression, arguments ...Expression) *CallNode {
-	return &CallNode{Function: function, Arguments: arguments}
 }
 
 func ExpressionStatement(expression Expression) *ExpressionStatementNode {
